@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+
+    <script>
+
+        $(document).ready(function() {
+            console.log('Up and running')
+            
+            let workHandler = function(e) {
+                e.preventDefault()
+                
+                c = $('#console')
+                if (e.target.id == 'add') {
+                    $('#work').append('<button id="' + $('#t').val() + '">' + $('#t').val() + '</button')
+                    return
+                }
+                if (e.target.id == 'clear') {
+                    c.text('')
+                } else {
+                    c.append('You clicked on ')
+                    c.append(e.target.id)
+                    c.append('<br />')
+                }
+            }
+
+            $('#work').on('click', 'button', workHandler)
+        })
+
+    </script>
+    
+    <body>
+
+        <div id='work'>
+            <button id='clear'>clear</button>
+            <button id='b'>b</button>
+            <button id='c'>c</button>
+            <input type='text' id='t' />
+            <button id='add'>add</button>
+        </div>
+
+        <div id='console'>
+        </div>
+
+    </body>
+</html>
