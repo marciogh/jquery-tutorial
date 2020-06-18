@@ -1,47 +1,78 @@
 <html>
     <head>
+        <link rel="stylesheet" href="index.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
     <script>
 
-        $(document).ready(function() {
+        $(document).ready(() => {
             console.log('Up and running')
-            
-            let workHandler = function(e) {
+            c = $('#console')
+
+            let workEventHandler = (e) => {
+                
                 e.preventDefault()
                 
-                c = $('#console')
+                $(`#${e.target.id}`).addClass('active')
+                $(`#${e.target.id}`).siblings().removeClass('active')
+                
                 if (e.target.id == 'add') {
-                    $('#work').append('<button id="' + $('#t').val() + '">' + $('#t').val() + '</button')
+                    let newButton = $('#t').val()
+                    if (newButton) {
+                        $('#work').prepend(`<button id=${newButton} class='added'>${newButton}</button>`)
+                        $('#work #t').val('')
+                    }
                     return
                 }
+                
                 if (e.target.id == 'clear') {
                     c.text('')
-                } else {
-                    c.append('You clicked on ')
-                    c.append(e.target.id)
-                    c.append('<br />')
+                    $('#work button').removeClass('active')
+                    $('#work button.added').remove()
                 }
+
+                c.append('You clicked on ')
+                c.append($(`#${e.target.id}`).text())
+                c.append('<br />')
+
             }
 
-            $('#work').on('click', 'button', workHandler)
+            $('#work').on('click', 'button', workEventHandler)
+
+
+            let buttonHoverInHandler = (e) => {
+                $('#hover span').html(`hover in ${e.target.id}`)
+            }
+            let buttonHoverOutHandler = (e) => {
+                $('#hover span').html('<br />')
+            }
+            $('#work button').hover(buttonHoverInHandler, buttonHoverOutHandler)
+
         })
 
     </script>
     
     <body>
 
+        <h1>JQuery Events Demo</h1>
+
+        <div id='hover'>
+            <span>Static hover events here</span>
+        </div>
+
         <div id='work'>
+            <button id='b1'>button 1</button>
+            <button id='b2'>button 2</button>
+            <br />
+            new button: <input type='text' id='t' />
+            <button id='add'>add button</button>
+            <br />
             <button id='clear'>clear</button>
-            <button id='b'>b</button>
-            <button id='c'>c</button>
-            <input type='text' id='t' />
-            <button id='add'>add</button>
         </div>
 
         <div id='console'>
         </div>
-
+       
     </body>
 </html>
