@@ -6,35 +6,42 @@
 
     <script>
 
+        // wait for window be ready for jquery
         $(document).ready(() => {
-            console.log('Up and running')
-            c = $('#console')
+            console.log('jquery ready')
 
+            // function to handle all events on `work` div
             let workEventHandler = (e) => {
                 
+                // prevent browser doing any standard action
                 e.preventDefault()
-                
-                $(`#${e.target.id}`).addClass('active')
-                $(`#${e.target.id}`).siblings().removeClass('active')
+
+                // toggle active class                
+                $(`#${e.target.id}`).removeClass('inactive').addClass('active')
+                $(`#${e.target.id}`).siblings('button').removeClass('active').addClass('inactive')
                 
                 if (e.target.id == 'add') {
                     let newButton = $('#t').val()
                     if (newButton) {
-                        $('#work').prepend(`<button id=${newButton} class='added'>${newButton}</button>`)
+                        $('#work #addedPlaceholder').after(`<button id=${newButton} class='added inactive'>${newButton}</button>`)
                         $('#work #t').val('')
                     }
                     return
                 }
-                
+
+                $('#console').append(`Clicked on ${e.target.id}<br />`)
+
                 if (e.target.id == 'clear') {
-                    c.text('')
-                    $('#work button').removeClass('active')
+                    $('#console').html('')
+                    $('#work button').removeClass('active').addClass('inactive')
                     $('#work button.added').remove()
                 }
 
-                c.append('You clicked on ')
-                c.append($(`#${e.target.id}`).text())
-                c.append('<br />')
+                if (e.target.id == 'clearAnim') {
+                    $('#move').html('disabled')
+                    $('#hover').html('disabled')
+                    $('#work, #work button').off('.anim')
+                }
 
             }
 
@@ -47,7 +54,14 @@
             let buttonHoverOutHandler = (e) => {
                 $('#hover span').html('<br />')
             }
-            $('#work button').hover(buttonHoverInHandler, buttonHoverOutHandler)
+            $('#work button').on('mouseenter.anim', buttonHoverInHandler)
+            $('#work button').on('mouseleave.anim', buttonHoverOutHandler)
+
+            $('#work').on('mousemove.anim', (e) => {
+                $('#move').html(`${e.offsetX} ${e.offsetY}`)
+            })
+
+            $('#work button').addClass('inactive')
 
         })
 
@@ -57,6 +71,10 @@
 
         <h1>JQuery Events Demo</h1>
 
+        <div id='move'>
+            <span>Mouse move events here</span>
+        </div>
+
         <div id='hover'>
             <span>Static hover events here</span>
         </div>
@@ -64,11 +82,13 @@
         <div id='work'>
             <button id='b1'>button 1</button>
             <button id='b2'>button 2</button>
+            <span id='addedPlaceholder'></span>
             <br />
             new button: <input type='text' id='t' />
             <button id='add'>add button</button>
             <br />
             <button id='clear'>clear</button>
+            <button id='clearAnim'>clear anim</button>
         </div>
 
         <div id='console'>
